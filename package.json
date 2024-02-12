@@ -1,0 +1,17 @@
+{
+  "name": "sudoku",
+  "version": "1.0.0",
+  "description": "sudoku game running in terminal, written in javascript",
+  "bin": "bin/sudoku.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "t1ny5am <wushuang1227@gmail.com>",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "inquirer": "^9.2.14"
+  }
+}
