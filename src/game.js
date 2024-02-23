@@ -46,7 +46,8 @@ export default class game {
       if (index % 9 === 0) {
         this.board.push('|')
       }
-      this.board[this.board.length - 1] += number === '.' ? '   |' : ` ${this.formatNumberByPos(number, index)} |`
+      this.board[this.board.length - 1] +=
+        number === '.' ? '   |' : ` ${this.formatNumberByPos(number, index)} |`
       if (index % 9 === 8) {
         // cursor is at the current line
         if (Math.floor(index / 9) === this.cursorPos[1]) {
@@ -83,17 +84,21 @@ export default class game {
   moveCursor(direction) {
     switch (direction) {
       case 'up':
-        this.cursorPos[1] = this.cursorPos[1] > 0 ? this.cursorPos[1] - 1 : this.cursorPos[1]
-        break;
+        this.cursorPos[1] =
+          this.cursorPos[1] > 0 ? this.cursorPos[1] - 1 : this.cursorPos[1]
+        break
       case 'left':
-        this.cursorPos[0] = this.cursorPos[0] > 0 ? this.cursorPos[0] - 1 : this.cursorPos[0]
-        break;
+        this.cursorPos[0] =
+          this.cursorPos[0] > 0 ? this.cursorPos[0] - 1 : this.cursorPos[0]
+        break
       case 'down':
-        this.cursorPos[1] = this.cursorPos[1] < 8 ? this.cursorPos[1] + 1 : this.cursorPos[1]
-        break;
+        this.cursorPos[1] =
+          this.cursorPos[1] < 8 ? this.cursorPos[1] + 1 : this.cursorPos[1]
+        break
       case 'right':
-        this.cursorPos[0] = this.cursorPos[0] < 8 ? this.cursorPos[0] + 1 : this.cursorPos[0]
-        break;
+        this.cursorPos[0] =
+          this.cursorPos[0] < 8 ? this.cursorPos[0] + 1 : this.cursorPos[0]
+        break
     }
     this.drawGame()
   }
@@ -156,12 +161,12 @@ export default class game {
 
     this.intervalId = setInterval(() => {
       this.drawGame()
-    }, 100);
+    }, 100)
   }
 
   submit() {
     if (/\./.test(this.cacheGame)) {
-      this.tip = 'You haven\'t finished the game yet'
+      this.tip = "You haven't finished the game yet"
       setTimeout(() => {
         this.tip = DEFAULT_TIP
       }, 1500)
