@@ -6,8 +6,11 @@ const DEFAULT_TIP = 'press <Enter> to submit your answer'
 
 export default class game {
   rawGame = ''
-
   cacheGame = ''
+  lastRenderGame = {
+    game: '',
+    cursorPos: [0, 0],
+  }
 
   board = []
 
@@ -32,31 +35,69 @@ export default class game {
     return num
   }
 
+  /** characters: https://en.wikipedia.org/wiki/Box-drawing_character */
   drawGame() {
+    if (
+      this.lastRenderGame.game === this.cacheGame &&
+      this.lastRenderGame.cursorPos[0] === this.cursorPos[0] &&
+      this.lastRenderGame.cursorPos[1] === this.cursorPos[1]
+    ) {
+      return
+    }
+
+    /** update last render game info */
+    this.lastRenderGame.game = this.cacheGame
+    this.lastRenderGame.cursorPos = [...this.cursorPos]
+
     readline.cursorTo(process.stdout, 0, 0)
     readline.clearScreenDown(process.stdout)
 
     this.board = []
-    const dividerLine = `+${Array(9).fill('---+').join('')}`
+    const topLine = `\u250c${Array(8)
+      .fill('\u2500\u2500\u2500\u252c')
+      .join('')}\u2500\u2500\u2500\u2510`
+    const dividerLine = `\u251c${Array(8)
+      .fill('\u2500\u2500\u2500\u253c')
+      .join('')}\u2500\u2500\u2500\u2524`
+    const bottomLine = `\u2514${Array(8)
+      .fill('\u2500\u2500\u2500\u2534')
+      .join('')}\u2500\u2500\u2500\u2518`
 
     // top line
-    this.board.push(dividerLine)
+    this.board.push(topLine)
 
-    this.cacheGame.split('').forEach((number, index) => {
-      if (index % 9 === 0) {
-        this.board.push('|')
-      }
-      this.board[this.board.length - 1] +=
-        number === '.' ? '   |' : ` ${this.formatNumberByPos(number, index)} |`
-      if (index % 9 === 8) {
-        // cursor is at the current line
-        if (Math.floor(index / 9) === this.cursorPos[1]) {
+    const numArr = this.cacheGame.split('')
+    const cacheGameArr = []
+    const chunkSize = 9
+    for (let i = 0; i < numArr.length; i += chunkSize) {
+      const chunk = numArr.slice(i, i + chunkSize)
+      cacheGameArr.push(chunk)
+    }
+
+    cacheGameArr.forEach((row, index) => {
+      const rowStr = `\u2502${row
+        .map((num, numIndex) =>
+          num === '.'
+            ? '   \u2502'
+            : ` ${this.formatNumberByPos(
+                num,
+                index * chunkSize + numIndex,
+              )} \u2502`,
+        )
+        .join('')}`
+      this.board.push(rowStr)
+
+      /** push divider line (bottom line) */
+      if (index < cacheGameArr.length - 1) {
+        if (index === this.cursorPos[1]) {
           const dividerLineWithCursor = dividerLine.split('')
           dividerLineWithCursor[4 * this.cursorPos[0] + 2] = '^'
           this.board.push(dividerLineWithCursor.join(''))
         } else {
           this.board.push(dividerLine)
         }
+      } else {
+        this.board.push(bottomLine)
       }
     })
 
@@ -161,7 +202,7 @@ export default class game {
 
     this.intervalId = setInterval(() => {
       this.drawGame()
-    }, 100)
+    }, 500)
   }
 
   submit() {
