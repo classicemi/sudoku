@@ -16,3 +16,9 @@ Then you can play Sudoku after running `sudoku` command, enjoy!
 
 - Variable difficuty choices
 - Two key bindings - `WASD` and arrow-key style
+
+## Future feature
+
+- Multi language support
+- Hint of available numbers
+- Better UI
